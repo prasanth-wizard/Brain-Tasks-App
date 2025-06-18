@@ -1,0 +1,14 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::EKS::Service
+      Properties:
+        TaskDefinition: ""
+        LoadBalancerInfo:
+          ContainerName: brain-app
+          ContainerPort: 3000
+hooks:
+  AfterAllowTestTraffic:
+    - location: scripts/deploy.sh
+      timeout: 300
+      runas: root
