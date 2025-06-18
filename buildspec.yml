@@ -6,7 +6,7 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 061039785879.dkr.ecr.eu-north-1.amazonaws.com
       - echo Logging in to Docker Hub...
-      - echo $DOCKERHUB_PASS | docker login -u prasanth0003 --password-stdin
+      - docker login -u "prasanth0003" -p "$DOCKERHUB_PASS"
   build:
     commands:
       - echo Build started on `date`
@@ -16,3 +16,4 @@ phases:
     commands:
       - echo Build completed on `date`
       - docker push 061039785879.dkr.ecr.eu-north-1.amazonaws.com/brain-ecr:react_image
+
