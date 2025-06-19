@@ -19,22 +19,4 @@ spec:
           image: 061039785879.dkr.ecr.eu-north-1.amazonaws.com/brain-ecr:react_image
           ports:
             - containerPort: 3000
-          volumeMounts:
-            - name: app-logs
-              mountPath: /var/log
-        - name: cloudwatch-agent
-          image: amazon/cloudwatch-agent:latest
-          volumeMounts:
-            - name: cwagent-config
-              mountPath: /etc/cwagentconfig
-            - name: app-logs
-              mountPath: /var/log
-          command: ["/opt/aws/amazon-cloudwatch-agent/bin/start-amazon-cloudwatch-agent"]
-          args: ["-config", "file:/etc/cwagentconfig/cloudwatch-agent-config.json"]
-      volumes:
-        - name: cwagent-config
-          configMap:
-            name: cwagent-config
-        - name: app-logs
-          emptyDir: {}
 
