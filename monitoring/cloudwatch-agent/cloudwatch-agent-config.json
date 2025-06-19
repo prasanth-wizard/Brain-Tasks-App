@@ -4,7 +4,7 @@
       "files": {
         "collect_list": [
           {
-            "file_path": "/var/log/app.log",
+            "file_path": "/var/log/nginx/access.log",
             "log_group_name": "/aws/brain-tasks-app/app",
             "log_stream_name": "{hostname}-app",
             "timestamp_format": "%Y-%m-%d %H:%M:%S"
