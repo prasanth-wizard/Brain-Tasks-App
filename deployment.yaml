@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: brain-app-deployment
+  labels:
+    app: brain-app
 spec:
   replicas: 1
   selector:
@@ -13,25 +15,26 @@ spec:
         app: brain-app
     spec:
       containers:
-      - name: brain-app
-        image: 061039785879.dkr.ecr.eu-north-1.amazonaws.com/brain-ecr:react_image
-        ports:
-        - containerPort: 3000
-        volumeMounts:
-        - name: nginx-logs
-          mountPath: /var/log/nginx
-      
-      - name: cloudwatch-agent
-        image: amazon/cloudwatch-agent:latest
-        volumeMounts:
-        - name: nginx-logs
-          mountPath: /var/log/nginx
-        - name: cwagent-config
-          mountPath: /etc/cwagentconfig
-      
+        - name: brain-app
+          image: 061039785879.dkr.ecr.eu-north-1.amazonaws.com/brain-ecr:react_image
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: app-logs
+              mountPath: /var/log
+        - name: cloudwatch-agent
+          image: amazon/cloudwatch-agent:latest
+          volumeMounts:
+            - name: cwagent-config
+              mountPath: /etc/cwagentconfig
+            - name: app-logs
+              mountPath: /var/log
+          command: ["/opt/aws/amazon-cloudwatch-agent/bin/start-amazon-cloudwatch-agent"]
+          args: ["-config", "file:/etc/cwagentconfig/cloudwatch-agent-config.json"]
       volumes:
-      - name: nginx-logs
-        emptyDir: {}
-      - name: cwagent-config
-        configMap:
-          name: cwagent-config
+        - name: cwagent-config
+          configMap:
+            name: cwagent-config
+        - name: app-logs
+          emptyDir: {}
+
