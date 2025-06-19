@@ -22,6 +22,7 @@ spec:
           volumeMounts:
             - name: app-logs
               mountPath: /var/log
+
         - name: cloudwatch-agent
           image: amazon/cloudwatch-agent:latest
           volumeMounts:
@@ -29,18 +30,17 @@ spec:
               mountPath: /var/log
             - name: cwagent-config
               mountPath: /etc/cwagentconfig
-          command: ["/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl"]
+          command: ["/usr/bin/amazon-cloudwatch-agent"]
           args:
-            - "-a"
-            - "fetch-config"
-            - "-m"
+            - "-config"
+            - "/etc/cwagentconfig/cloudwatch-agent-config.json"
+            - "-role"
             - "ec2"
-            - "-c"
-            - "file:/etc/cwagentconfig/cloudwatch-agent-config.json"
-            - "-s"
+
       volumes:
         - name: app-logs
           emptyDir: {}
+
         - name: cwagent-config
           configMap:
             name: cwagent-config
