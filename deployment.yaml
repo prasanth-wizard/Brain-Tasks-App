@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: brain-app-deployment
-  labels:
-    app: brain-app
 spec:
   replicas: 1
   selector:
@@ -19,4 +17,27 @@ spec:
           image: 061039785879.dkr.ecr.eu-north-1.amazonaws.com/brain-ecr:react_image
           ports:
             - containerPort: 3000
+          volumeMounts:
+            - name: applogs
+              mountPath: /app-logs
+
+        - name: cloudwatch-agent
+          image: amazon/cloudwatch-agent:latest
+          volumeMounts:
+            - name: applogs
+              mountPath: /app-logs
+            - name: cwagentconfig
+              mountPath: /etc/cwagentconfig
+              readOnly: true
+          args:
+            - -config
+            - /etc/cwagentconfig/cwagentconfig.json
+            - -envconfig
+
+      volumes:
+        - name: applogs
+          emptyDir: {}
+        - name: cwagentconfig
+          configMap:
+            name: cwagentconfig
 
