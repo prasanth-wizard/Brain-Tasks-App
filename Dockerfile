@@ -13,6 +13,4 @@ COPY dist/ /usr/share/nginx/html/
 # Expose app port
 EXPOSE 3000
 
-# ✅ At container startup, create app log file with open permissions
-CMD ["sh", "-c", "mkdir -p /var/log && touch /var/log/app.log && chmod 666 /var/log/app.log && nginx -g 'daemon off;'"]
-
+CMD ["sh", "-c", "nginx -g 'daemon off;' 2>&1 | tee -a /app-logs/app.log"]
